@@ -211,6 +211,12 @@ public class ZombieAI : MonoBehaviour
         StopAllSounds();  // Stop all sounds when the zombie dies
         PlaySound(deathSound, false);
 
+        // Award points for killing the zombie
+        if (ZombiePointsManager.Instance != null)
+        {
+            ZombiePointsManager.Instance.AddPoints(ZombiePointsManager.Instance.pointsPerZombie);
+        }
+
         ZombieManager zombieManager = FindObjectOfType<ZombieManager>();
         if (zombieManager != null)
             zombieManager.OnZombieDeath();
