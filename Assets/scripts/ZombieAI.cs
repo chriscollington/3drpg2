@@ -27,7 +27,7 @@ public class ZombieAI : MonoBehaviour
     public AudioClip walkingSound;
     public AudioClip attackSound;
     public AudioClip idleSound;
-    public AudioClip deathSound;  // Death sound added here
+    public AudioClip deathSound;
     public AudioClip gruntSound;
 
     private AudioSource audioSource;
@@ -209,7 +209,11 @@ public class ZombieAI : MonoBehaviour
             animator.SetTrigger("Dead");
 
         StopAllSounds();  // Stop all sounds when the zombie dies
-        PlaySound(deathSound, false);  // Play the death sound when the zombie dies
+        PlaySound(deathSound, false);
+
+        ZombieManager zombieManager = FindObjectOfType<ZombieManager>();
+        if (zombieManager != null)
+            zombieManager.OnZombieDeath();
 
         // Award points for killing the zombie
         if (ZombiePointsManager.Instance != null)
@@ -217,9 +221,6 @@ public class ZombieAI : MonoBehaviour
             ZombiePointsManager.Instance.AddPoints(ZombiePointsManager.Instance.pointsPerZombie);
         }
 
-        ZombieManager zombieManager = FindObjectOfType<ZombieManager>();
-        if (zombieManager != null)
-            zombieManager.OnZombieDeath();
 
         Destroy(gameObject, 2f);
     }
