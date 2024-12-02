@@ -303,7 +303,7 @@ MonoBehaviour:
   walkingSound: {fileID: 8300000, guid: d2445163e8df7734590914b265098e4b, type: 3}
   attackSound: {fileID: 8300000, guid: d9b2687205f07b740b5d5dcc7cb4b14c, type: 3}
   idleSound: {fileID: 8300000, guid: 19fcf47d095be8d4eba27387eb1e4b83, type: 3}
-  deathSound: {fileID: 8300000, guid: c69262ffb5b4ecd4a965c340076f0708, type: 3}
+  deathSound: {fileID: 8300000, guid: e53ada1dc9592f84f85d458ed7dbc7bc, type: 3}
   gruntSound: {fileID: 8300000, guid: 1a07a9106136e744498368f0bd852f2c, type: 3}
   gruntIntervalMin: 3
   gruntIntervalMax: 10
