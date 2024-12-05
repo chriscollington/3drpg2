@@ -198,6 +198,7 @@ public class ZombieAI : MonoBehaviour
         {
             Die();
         }
+
     }
 
     private void Die()

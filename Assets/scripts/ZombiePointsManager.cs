@@ -1,17 +1,18 @@
 using UnityEngine;
-using TMPro;  // Import the TextMeshPro namespace
-
+using TMPro;  
 public class ZombiePointsManager : MonoBehaviour
 {
     // Canvas for displaying points
     public Canvas pointsCanvas;
     public TextMeshProUGUI pointsText;  // Use TextMeshProUGUI for better text rendering
+    public TextMeshProUGUI highScoreText; // To display the high score
 
     // Points awarded per zombie
     public int pointsPerZombie = 10;
 
-    // Track total points
+    // Track total points and high score
     private int totalPoints = 0;
+    private int highScore = 0;
 
     // Singleton reference to the ZombiePointsManager
     public static ZombiePointsManager Instance;
@@ -27,12 +28,16 @@ public class ZombiePointsManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // Load the high score from PlayerPrefs if it exists
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
     }
 
     private void Start()
     {
-        // Initialize the points text
+        // Initialize the points and high score text
         UpdatePointsDisplay();
+        UpdateHighScoreDisplay();
     }
 
     // Method to increase points when a zombie dies
@@ -40,6 +45,14 @@ public class ZombiePointsManager : MonoBehaviour
     {
         totalPoints += points;
         UpdatePointsDisplay();
+
+        // Check if the current score is a new high score
+        if (totalPoints > highScore)
+        {
+            highScore = totalPoints;
+            PlayerPrefs.SetInt("HighScore", highScore); // Save the new high score
+            UpdateHighScoreDisplay();  // Update the high score display
+        }
     }
 
     // Method to update the points display
@@ -48,6 +61,15 @@ public class ZombiePointsManager : MonoBehaviour
         if (pointsText != null)
         {
             pointsText.text = "Points: " + totalPoints.ToString();
+        }
+    }
+
+    // Method to update the high score display
+    private void UpdateHighScoreDisplay()
+    {
+        if (highScoreText != null)
+        {
+            highScoreText.text = "High Score: " + highScore.ToString();
         }
     }
 }
