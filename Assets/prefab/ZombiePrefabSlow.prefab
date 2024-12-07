@@ -307,6 +307,11 @@ MonoBehaviour:
   gruntSound: {fileID: 8300000, guid: 34377ff2be2b3ef4abdd801184ce2b3a, type: 3}
   gruntIntervalMin: 3
   gruntIntervalMax: 10
+  obstacleDetectionDistance: 2
+  obstacleAvoidanceForce: 3
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &5089581673287000335
 MonoBehaviour:
   m_ObjectHideFlags: 0

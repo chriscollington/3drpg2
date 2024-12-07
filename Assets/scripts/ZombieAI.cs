@@ -39,6 +39,11 @@ public class ZombieAI : MonoBehaviour
     private bool isAttacking = false; // To track if the zombie is attacking
     private float attackAnimationTime = 1f; // Estimated attack animation duration (in seconds)
 
+    // Obstacle avoidance fields
+    public float obstacleDetectionDistance = 2f; // Distance to detect obstacles
+    public float obstacleAvoidanceForce = 3f; // Strength of avoidance
+    public LayerMask obstacleLayer; // Layer to detect as obstacles
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -118,6 +123,14 @@ public class ZombieAI : MonoBehaviour
         if (isAttacking) return;
 
         Vector3 direction = (player.position - transform.position).normalized;
+
+        // Add obstacle avoidance logic
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, obstacleDetectionDistance, obstacleLayer))
+        {
+            Vector3 avoidDirection = Vector3.Cross(hit.normal, Vector3.up).normalized;
+            direction += avoidDirection * obstacleAvoidanceForce;
+        }
+
         transform.position += direction * moveSpeed * Time.deltaTime;
 
         Quaternion lookRotation = Quaternion.LookRotation(direction);

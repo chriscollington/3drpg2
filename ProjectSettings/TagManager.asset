@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Zombie
+  - Obstical
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - ' whatIsEnemy'
   - Water
   - UI
-  - 
+  - Obstical
   - 
   - 
   - 
