@@ -84,11 +84,10 @@ public class ZombieAI : MonoBehaviour
 
     private void Update()
     {
-        // Skip everything if the game is paused
         if (isDead || PauseMenu.isPaused)
         {
-            StopAllSounds();  // Ensure sounds are stopped when paused
-            return;  // Skip the rest of the Update logic when paused
+            StopAllSounds();
+            return;
         }
 
         if (healthBarSlider != null)
@@ -116,7 +115,7 @@ public class ZombieAI : MonoBehaviour
 
     private void MoveTowardsPlayer()
     {
-        if (isAttacking) return;  // Prevent movement during attack animation
+        if (isAttacking) return;
 
         Vector3 direction = (player.position - transform.position).normalized;
         transform.position += direction * moveSpeed * Time.deltaTime;
@@ -124,7 +123,6 @@ public class ZombieAI : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
-        // Ensure walking sound plays if not grunting or attacking, and the game is not paused
         if (!isGrunting && !isAttacking && !PauseMenu.isPaused && (!audioSource.isPlaying || audioSource.clip != walkingSound))
         {
             PlaySound(walkingSound, true);
@@ -141,11 +139,11 @@ public class ZombieAI : MonoBehaviour
                 playerHealth.TakeDamage(attackDamage);
                 if (animator != null)
                 {
-                    animator.SetTrigger("Attack"); // Trigger attack animation
-                    PlayAttackSound(); // Play the attack sound when the attack animation is triggered
+                    animator.SetTrigger("Attack");
+                    PlayAttackSound();
                 }
-                isAttacking = true;  // Set the attacking state
-                Invoke(nameof(ResumePostAttackState), attackAnimationTime); // Resume post-attack state after animation time
+                isAttacking = true;
+                Invoke(nameof(ResumePostAttackState), attackAnimationTime);
             }
             timeSinceLastAttack = 0f;
         }
@@ -157,17 +155,17 @@ public class ZombieAI : MonoBehaviour
 
     private void HandleGrunting()
     {
-        if (isAttacking || PauseMenu.isPaused) return;  // Prevent grunting while attacking or when paused
+        if (isAttacking || PauseMenu.isPaused) return;
 
         gruntTimer -= Time.deltaTime;
 
         if (gruntTimer <= 0f && !isGrunting)
         {
             isGrunting = true;
-            audioSource.Stop(); // Stop walking sound
-            PlaySound(gruntSound, false); // Play grunt sound once
+            audioSource.Stop();
+            PlaySound(gruntSound, false);
             Invoke(nameof(ResumeWalkingSoundAfterGrunt), gruntSound.length);
-            gruntTimer = Random.Range(gruntIntervalMin, gruntIntervalMax); // Reset timer
+            gruntTimer = Random.Range(gruntIntervalMin, gruntIntervalMax);
         }
     }
 
@@ -176,7 +174,7 @@ public class ZombieAI : MonoBehaviour
         isGrunting = false;
         if (!isAttacking && !PauseMenu.isPaused)
         {
-            PlaySound(walkingSound, true); // Resume walking sound if not attacking and the game is not paused
+            PlaySound(walkingSound, true);
         }
     }
 
@@ -185,9 +183,9 @@ public class ZombieAI : MonoBehaviour
         isAttacking = false;
         if (!PauseMenu.isPaused)
         {
-            PlaySound(walkingSound, true);  // Resume walking sound after attack is done
+            PlaySound(walkingSound, true);
         }
-        HandleGrunting(); // Ensure grunting can resume if needed
+        HandleGrunting();
     }
 
     public void TakeDamage(int damage)
@@ -198,7 +196,14 @@ public class ZombieAI : MonoBehaviour
         {
             Die();
         }
+    }
 
+    private void PlayOneShotSound(AudioClip clip)
+    {
+        if (clip != null && !PauseMenu.isPaused)
+        {
+            AudioSource.PlayClipAtPoint(clip, transform.position);
+        }
     }
 
     private void Die()
@@ -209,19 +214,17 @@ public class ZombieAI : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("Dead");
 
-        StopAllSounds();  // Stop all sounds when the zombie dies
-        PlaySound(deathSound, false);
+        StopAllSounds();
+        PlayOneShotSound(deathSound);
 
         ZombieManager zombieManager = FindObjectOfType<ZombieManager>();
         if (zombieManager != null)
             zombieManager.OnZombieDeath();
 
-        // Award points for killing the zombie
         if (ZombiePointsManager.Instance != null)
         {
             ZombiePointsManager.Instance.AddPoints(ZombiePointsManager.Instance.pointsPerZombie);
         }
-
 
         Destroy(gameObject, 2f);
     }
@@ -238,11 +241,9 @@ public class ZombieAI : MonoBehaviour
 
     private void StopAllSounds()
     {
-        // Stop any currently playing sound
         audioSource.Stop();
     }
 
-    // New method to play the attack sound
     private void PlayAttackSound()
     {
         if (attackSound != null && !PauseMenu.isPaused)
@@ -253,17 +254,16 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
-    // Pause-related methods to stop/resume walking sounds
     public void StopWalkingSound()
     {
-        audioSource.Stop();  // Stop the walking sound while the game is paused
+        audioSource.Stop();
     }
 
     public void ResumeWalkingSoundOnUnpause()
     {
         if (!isDead && !isAttacking && !isGrunting && !PauseMenu.isPaused)
         {
-            PlaySound(walkingSound, true);  // Resume walking sound after pause
+            PlaySound(walkingSound, true);
         }
     }
 }
