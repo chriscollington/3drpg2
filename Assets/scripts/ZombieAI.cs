@@ -46,23 +46,24 @@ public class ZombieAI : MonoBehaviour
 
     private void Start()
     {
+        // Ensure the player transform is found
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         currentHealth = maxHealth;
 
-        // Initialize AudioSource
+        // Initialize the AudioSource component
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        // Configure AudioSource for 3D spatial sound
+        // Configure AudioSource for WebGL
         audioSource.spatialBlend = 1f; // Full 3D sound
-        audioSource.rolloffMode = AudioRolloffMode.Logarithmic; // Standard distance attenuation
-        audioSource.minDistance = 1f; // The distance at which sound is at full volume
-        audioSource.maxDistance = 20f; // The distance where sound becomes inaudible
-        audioSource.dopplerLevel = 0f; // Optionally, disable Doppler effect if needed
-        audioSource.volume = 1f; // Set an appropriate volume (test this value for different browsers)
+        audioSource.rolloffMode = AudioRolloffMode.Linear; // Linear for WebGL compatibility
+        audioSource.minDistance = 2f; // Adjust this based on your scene scale
+        audioSource.maxDistance = 40f; // Adjust for sound fade-out distance
+        audioSource.dopplerLevel = 0f; // Disable Doppler for simplicity
+        audioSource.volume = 1f; // Standard volume setting
 
         // Health bar setup
         if (HealthCamera == null)
@@ -96,6 +97,9 @@ public class ZombieAI : MonoBehaviour
             StopAllSounds();
             return;
         }
+
+        // Update AudioSource position to ensure correct spatial sound
+        audioSource.transform.position = transform.position;
 
         if (healthBarSlider != null)
             healthBarSlider.value = currentHealth;
