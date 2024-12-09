@@ -57,10 +57,12 @@ public class ZombieAI : MonoBehaviour
         }
 
         // Configure AudioSource for 3D spatial sound
-        audioSource.spatialBlend = 1f; // Set to 3D sound
-        audioSource.rolloffMode = AudioRolloffMode.Logarithmic; // Adjust based on distance
-        audioSource.minDistance = 1f; // Full volume within 1 meter
-        audioSource.maxDistance = 20f; // Volume fades out by 20 meters
+        audioSource.spatialBlend = 1f; // Full 3D sound
+        audioSource.rolloffMode = AudioRolloffMode.Logarithmic; // Standard distance attenuation
+        audioSource.minDistance = 1f; // The distance at which sound is at full volume
+        audioSource.maxDistance = 20f; // The distance where sound becomes inaudible
+        audioSource.dopplerLevel = 0f; // Optionally, disable Doppler effect if needed
+        audioSource.volume = 1f; // Set an appropriate volume (test this value for different browsers)
 
         // Health bar setup
         if (HealthCamera == null)
