@@ -44,6 +44,9 @@ public class ZombieAI : MonoBehaviour
     public float obstacleAvoidanceForce = 3f; // Strength of avoidance
     public LayerMask obstacleLayer; // Layer to detect as obstacles
 
+    // Volume control for zombie sound effects
+    [Range(0f, 1f)] public float zombieSoundVolume = 1f; // 1 is 100% volume, 0 is mute
+
     private void Start()
     {
         // Ensure the player transform is found
@@ -63,7 +66,7 @@ public class ZombieAI : MonoBehaviour
         audioSource.minDistance = 2f; // Adjust this based on your scene scale
         audioSource.maxDistance = 40f; // Adjust for sound fade-out distance
         audioSource.dopplerLevel = 0f; // Disable Doppler for simplicity
-        audioSource.volume = 1f; // Standard volume setting
+        audioSource.volume = zombieSoundVolume; // Set volume based on slider
 
         // Health bar setup
         if (HealthCamera == null)
@@ -88,6 +91,19 @@ public class ZombieAI : MonoBehaviour
         // Set the initial timer for the first grunt
         gruntTimer = Random.Range(gruntIntervalMin, gruntIntervalMax);
         PlaySound(walkingSound, true);
+
+        // Load the volume setting from PlayerPrefs
+        if (PlayerPrefs.HasKey("ZombieVolume"))
+        {
+            zombieSoundVolume = PlayerPrefs.GetFloat("ZombieVolume"); // Set the volume from saved preferences
+        }
+        else
+        {
+            zombieSoundVolume = 1f; // Default volume if not set
+        }
+
+        // Apply the loaded volume setting to the AudioSource
+        audioSource.volume = zombieSoundVolume;
     }
 
     private void Update()

@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject Pausemenu;
+    public GameObject OptionsMenu;
     public static bool isPaused;
     public AudioSource backgroundMusic;  // Reference to the AudioSource for background music
 

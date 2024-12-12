@@ -9,9 +9,10 @@ public class BackgroundMusic : MonoBehaviour
         // Get the AudioSource component attached to this GameObject
         audioSource = GetComponent<AudioSource>();
 
-        // Play the music if it's not already playing
+        // Make sure to tag the AudioSource as "BackgroundMusic"
         if (audioSource != null && !audioSource.isPlaying)
         {
+            audioSource.tag = "BackgroundMusic";  // Tag it as "BackgroundMusic" for volume control
             audioSource.Play();
         }
     }
@@ -41,4 +42,3 @@ public class BackgroundMusic : MonoBehaviour
         }
     }
 }
-

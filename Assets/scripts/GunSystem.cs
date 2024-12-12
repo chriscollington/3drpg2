@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using TMPro;
 
@@ -30,6 +29,9 @@ public class GunSystem : MonoBehaviour
     public AudioClip machineGunSound;  // Reference to the machine gun sound effect
     private AudioSource audioSource;   // AudioSource component
 
+    // Volume control for gun sound
+    [Range(0f, 1f)] public float gunSoundVolume = 1f; // 1 is 100% volume, 0 is mute
+
     private void Awake()
     {
         bulletsLeft = magazineSize;
@@ -41,6 +43,19 @@ public class GunSystem : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        // Load the volume setting from PlayerPrefs
+        if (PlayerPrefs.HasKey("GunVolume"))
+        {
+            gunSoundVolume = PlayerPrefs.GetFloat("GunVolume"); // Set the volume from saved preferences
+        }
+        else
+        {
+            gunSoundVolume = 1f; // Default volume if not set
+        }
+
+        // Update the audio source volume based on the current gunSoundVolume
+        UpdateGunSoundVolume();
     }
 
     private void Update()
@@ -81,9 +96,10 @@ public class GunSystem : MonoBehaviour
 
         readyToShoot = false;
 
-        // Play shooting sound
+        // Play shooting sound with volume control
         if (machineGunSound != null && audioSource != null)
         {
+            audioSource.volume = gunSoundVolume; // Set volume based on gunSoundVolume
             audioSource.PlayOneShot(machineGunSound);
         }
 
@@ -140,5 +156,11 @@ public class GunSystem : MonoBehaviour
     {
         bulletsLeft = magazineSize;
         reloading = false;
+    }
+
+    // Method to update the gun sound volume (called by OptionsMenu)
+    public void UpdateGunSoundVolume()
+    {
+        audioSource.volume = gunSoundVolume; // Apply the volume to the AudioSource
     }
 }

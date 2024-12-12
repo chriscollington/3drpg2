@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    // Public variable to assign background music in the inspector
-    public AudioClip backgroundMusic;
-
+    public AudioClip backgroundMusic;  // Public variable to assign background music in the inspector
     private AudioSource audioSource;
+    public Slider musicVolumeSlider;  // Reference to the slider UI element for controlling music volume
 
     void Start()
     {
@@ -20,8 +18,30 @@ public class MainMenu : MonoBehaviour
         {
             audioSource.clip = backgroundMusic;
             audioSource.loop = true;  // Set the background music to loop
-            audioSource.Play();      // Start playing the background music
+            audioSource.Play();
+            audioSource.tag = "MainMenuSound"; // Tag it as "MainMenuSound" for volume control
         }
+
+        // Initialize the volume slider to the saved volume setting
+        if (PlayerPrefs.HasKey("MusicVolume"))
+        {
+            musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+        }
+        else
+        {
+            musicVolumeSlider.value = 1f; // Default volume is 100% if no saved preference
+        }
+
+        // Add listener to change volume on slider value change
+        musicVolumeSlider.onValueChanged.AddListener(UpdateMusicVolume);
+        UpdateMusicVolume(musicVolumeSlider.value); // Apply the initial volume when the scene starts
+    }
+
+    // Update the music volume and save the setting
+    private void UpdateMusicVolume(float value)
+    {
+        audioSource.volume = value;
+        PlayerPrefs.SetFloat("MusicVolume", value); // Save the volume setting
     }
 
     public void Play()
